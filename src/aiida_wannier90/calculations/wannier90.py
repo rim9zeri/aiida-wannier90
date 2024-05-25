@@ -393,8 +393,16 @@ class Wannier90Calculation(CalcJob):
             )
         ]
 
-        calcinfo.retrieve_list = retrieve_list
-        calcinfo.retrieve_temporary_list = []
+        try:
+            store = settings_dict.pop("always_store", True)
+        except AttributeError:
+            store = True
+        if store:
+            calcinfo.retrieve_list = retrieve_list
+            calcinfo.retrieve_temporary_list = []
+        else:
+            calcinfo.retrieve_list = []
+            calcinfo.retrieve_temporary_list = retrieve_list
         if pp_setup:
             # The parser will then put this in a SinglefileData (if present)
             calcinfo.retrieve_temporary_list.append(f"{self._SEEDNAME}.nnkp")
